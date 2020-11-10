@@ -475,6 +475,7 @@ class AudiobookAlbum(Agent.Album):
         series=''
         genre1=None
         genre2=None
+        volume=''
 
         for r in html.xpath('//div[contains (@id, "adbl_page_content")]'):
             date = self.getDateFromString(self.getStringContentFromXPath(r, '//li[contains (., "{0}")]/span[2]//text()'.format(ctx['REL_DATE_INFO']).decode('utf-8')))
@@ -600,7 +601,7 @@ class AudiobookAlbum(Agent.Album):
         metadata.rating = float(rating) * 2
 
         metadata.title = title
-        metadata.title_sort = series + volume + " - " + title
+        metadata.title_sort = ' - '.join(filter(None, [(series+volume),title]))
 
         media.artist = author
 
