@@ -543,6 +543,8 @@ class AudiobookAlbum(Agent.Album):
             for r in html.xpath('//span[contains(@class, "seriesLabel")]'):
                 series = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]//a[1]')
                 volume = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]/text()[2]').strip()
+                if volume == ",":
+                    volume = ""
 
         #cleanup synopsis
         synopsis = synopsis.replace("<i>", "")
