@@ -592,7 +592,14 @@ class AudiobookAlbum(Agent.Album):
         metadata.genres.add(genre1)
         metadata.genres.add(genre2)
 
-		# other metadata
+        # clean title
+        series2 = series
+        if series.endswith("Series"):
+            series2 = series[:-7]
+        if title.endswith(": "+series2+volume):
+            title = title[:-(len(series2+volume)+2)]
+
+        # other metadata
         metadata.title = title
         metadata.studio = studio
         metadata.summary = synopsis
@@ -600,7 +607,6 @@ class AudiobookAlbum(Agent.Album):
         metadata.posters.validate_keys(thumb)
         metadata.rating = float(rating) * 2
 
-        metadata.title = title
         metadata.title_sort = ' - '.join(filter(None, [(series+volume),title]))
 
         media.artist = author
