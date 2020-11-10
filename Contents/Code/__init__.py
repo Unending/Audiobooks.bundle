@@ -334,7 +334,7 @@ class AudiobookAlbum(Agent.Album):
         self.Log('* ID:              %s', media.parent_metadata.id)
         self.Log('* Title:           %s', media.title)
         self.Log('* Name:            %s', media.name)
-        self.Log('* Name:            %s', media.album)
+        self.Log('* Album:           %s', media.album)
         self.Log('-----------------------------------------------------------------------')
 
         # Normalize the name
@@ -535,10 +535,13 @@ class AudiobookAlbum(Agent.Album):
                         except:
                             continue
 
-            for r in html.xpath('//li[contains (@class, "seriesLabel")]'):
-                series = self.getStringContentFromXPath(r, '//li[contains (@class, "seriesLabel")]//a[1]')
+            # for r in html.xpath('//li[contains (@class, "seriesLabel")]'):
+            #    series = self.getStringContentFromXPath(r, '//li[contains (@class, "seriesLabel")]//a[1]')
                 #Log(series.strip())
 
+            for r in html.xpath('//span[contains(@class, "seriesLabel")]'):
+                series = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]//a[1]')
+                volume = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]/text()[2]').strip()
 
         #cleanup synopsis
         synopsis = synopsis.replace("<i>", "")
@@ -572,6 +575,8 @@ class AudiobookAlbum(Agent.Album):
         self.Log('rating:      %s', rating)
         self.Log('genres:      %s, %s', genre1, genre2)
         self.Log('synopsis:    %s', synopsis)
+        self.Log('Series:      %s', series)
+        self.Log('Volume:      %s', volume)
 
 		# Set the date and year if found.
         if date is not None:
@@ -595,6 +600,8 @@ class AudiobookAlbum(Agent.Album):
         metadata.rating = float(rating) * 2
 
         metadata.title = title
+        metadata.title_sort = series + volume + " - " + title
+
         media.artist = author
 
         self.writeInfo('New data', url, metadata)
@@ -617,9 +624,6 @@ class AudiobookAlbum(Agent.Album):
 
     def addTask(self, queue, func, *args, **kargs):
         queue.put((func, args, kargs))
-
-
-
 
     ### Writes metadata information to log.
     def writeInfo(self, header, url, metadata):
