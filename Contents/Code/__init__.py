@@ -618,6 +618,10 @@ class AudiobookAlbum(Agent.Album):
         if title.endswith(": "+seriesshort+volume_def):
             title = title[:-(len(seriesshort+volume_def)+2)]
 
+        z = re.match("(.*)(, Book \d+)$", title)
+        if z:
+            title = z.group(1)
+            
         # other metadata
         metadata.title = title
         metadata.studio = studio
