@@ -473,9 +473,13 @@ class AudiobookAlbum(Agent.Album):
         date=None
         rating=None
         series=''
+        series2=''
+        series_def=''
         genre1=None
         genre2=None
         volume=''
+        volume2=''
+        volume_def=''
 
         for r in html.xpath('//div[contains (@id, "adbl_page_content")]'):
             date = self.getDateFromString(self.getStringContentFromXPath(r, '//li[contains (., "{0}")]/span[2]//text()'.format(ctx['REL_DATE_INFO']).decode('utf-8')))
@@ -542,9 +546,18 @@ class AudiobookAlbum(Agent.Album):
 
             for r in html.xpath('//span[contains(@class, "seriesLabel")]'):
                 series = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]//a[1]')
+                series2 = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]//a[2]')
+
+                series_def = series2 if series2 else series
+
                 volume = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]/text()[2]').strip()
                 if volume == ",":
                     volume = ""
+                volume2 = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]/text()[3]').strip()
+                if volume2 == ",":
+                    volume2 = ""
+
+                volume_def = volume2 if volume2 else volume
 
         #cleanup synopsis
         synopsis = synopsis.replace("<i>", "")
@@ -580,6 +593,10 @@ class AudiobookAlbum(Agent.Album):
         self.Log('synopsis:    %s', synopsis)
         self.Log('Series:      %s', series)
         self.Log('Volume:      %s', volume)
+        self.Log('Series2:     %s', series2)
+        self.Log('Volume2:     %s', volume2)
+        self.Log('Series_def:  %s', series_def)
+        self.Log('Volume_def:  %s', volume_def)
 
 		# Set the date and year if found.
         if date is not None:
@@ -595,11 +612,11 @@ class AudiobookAlbum(Agent.Album):
         metadata.genres.add(genre2)
 
         # clean title
-        series2 = series
-        if series.endswith("Series"):
-            series2 = series[:-7]
-        if title.endswith(": "+series2+volume):
-            title = title[:-(len(series2+volume)+2)]
+        seriesshort = series_def
+        if series_def.endswith("Series"):
+            seriesshort = series_def[:-7]
+        if title.endswith(": "+seriesshort+volume_def):
+            title = title[:-(len(seriesshort+volume_def)+2)]
 
         # other metadata
         metadata.title = title
@@ -609,7 +626,10 @@ class AudiobookAlbum(Agent.Album):
         metadata.posters.validate_keys(thumb)
         metadata.rating = float(rating) * 2
 
-        metadata.title_sort = ' - '.join(filter(None, [(series+volume),title]))
+        metadata.title_sort = ' - '.join(filter(None, [(series_def+volume_def),title]))
+
+        # metadata.collections.clear()
+        # metadata.collections.add(series_def)
 
         media.artist = author
 
