@@ -514,7 +514,8 @@ class AudiobookAlbum(Agent.Album):
                         date=self.getDateFromString(json_data['datePublished'])
                         title=json_data['name']
                         thumb=json_data['image']
-                        rating=json_data['aggregateRating']['ratingValue']
+                        if 'aggregateRating' in json_data:
+                            rating=json_data['aggregateRating']['ratingValue']
                         author=''
                         counter=0
                         for c in json_data['author'] :
@@ -621,14 +622,15 @@ class AudiobookAlbum(Agent.Album):
         z = re.match("(.*)(, Book \d+)$", title)
         if z:
             title = z.group(1)
-            
+
         # other metadata
         metadata.title = title
         metadata.studio = studio
         metadata.summary = synopsis
         metadata.posters[1] = Proxy.Media(HTTP.Request(thumb))
         metadata.posters.validate_keys(thumb)
-        metadata.rating = float(rating) * 2
+        if rating:
+            metadata.rating = float(rating) * 2
 
         metadata.title_sort = ' - '.join(filter(None, [(series_def+volume_def),title]))
 
