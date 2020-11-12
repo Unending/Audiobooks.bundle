@@ -549,7 +549,8 @@ class AudiobookAlbum(Agent.Album):
                 series = self.getStringContentFromXPath(r, '//li[contains(@class, "seriesLabel")]//a[1]')
                 series2 = self.getStringContentFromXPath(r, '//li[contains(@class, "seriesLabel")]//a[2]')
 
-                series_def = series2 if series2 else series
+                # series_def = series2 if series2 else series
+                series_def = series
 
                 volume = self.getStringContentFromXPath(r, '//li[contains(@class, "seriesLabel")]/text()[2]').strip()
                 if volume == ",":
@@ -558,8 +559,9 @@ class AudiobookAlbum(Agent.Album):
                 if volume2 == ",":
                     volume2 = ""
 
-                volume_def = volume2 if volume2 else volume
-
+                # volume_def = volume2 if volume2 else volume
+                volume_def = volume
+                
         #cleanup synopsis
         synopsis = synopsis.replace("<i>", "")
         synopsis = synopsis.replace("</i>", "")
