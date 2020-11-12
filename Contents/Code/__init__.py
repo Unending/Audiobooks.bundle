@@ -545,16 +545,16 @@ class AudiobookAlbum(Agent.Album):
             #    series = self.getStringContentFromXPath(r, '//li[contains (@class, "seriesLabel")]//a[1]')
                 #Log(series.strip())
 
-            for r in html.xpath('//span[contains(@class, "seriesLabel")]'):
-                series = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]//a[1]')
-                series2 = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]//a[2]')
+            for r in html.xpath('//li[contains(@class, "seriesLabel")]'):
+                series = self.getStringContentFromXPath(r, '//li[contains(@class, "seriesLabel")]//a[1]')
+                series2 = self.getStringContentFromXPath(r, '//li[contains(@class, "seriesLabel")]//a[2]')
 
                 series_def = series2 if series2 else series
 
-                volume = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]/text()[2]').strip()
+                volume = self.getStringContentFromXPath(r, '//li[contains(@class, "seriesLabel")]/text()[2]').strip()
                 if volume == ",":
                     volume = ""
-                volume2 = self.getStringContentFromXPath(r, '//span[contains(@class, "seriesLabel")]/text()[3]').strip()
+                volume2 = self.getStringContentFromXPath(r, '//li[contains(@class, "seriesLabel")]/text()[3]').strip()
                 if volume2 == ",":
                     volume2 = ""
 
