@@ -561,7 +561,7 @@ class AudiobookAlbum(Agent.Album):
 
                 # volume_def = volume2 if volume2 else volume
                 volume_def = volume
-                
+
         #cleanup synopsis
         synopsis = synopsis.replace("<i>", "")
         synopsis = synopsis.replace("</i>", "")
@@ -636,8 +636,9 @@ class AudiobookAlbum(Agent.Album):
 
         metadata.title_sort = ' - '.join(filter(None, [(series_def+volume_def),title]))
 
-        # metadata.collections.clear()
-        # metadata.collections.add(series_def)
+        metadata.collections.clear()
+        metadata.collections.add(series)
+        metadata.collections.add(series2)
 
         media.artist = author
 
