@@ -511,7 +511,7 @@ class AudiobookAlbum(Agent.Album):
                     if 'datePublished' in json_data:
                         #for key in json_data:
                         #    Log('{0}:{1}'.format(key, json_data[key]))
-                        date=self.getDateFromString(json_data['datePublished'])
+                        date=json_data['datePublished']
                         title=json_data['name']
                         thumb=json_data['image']
                         if 'aggregateRating' in json_data:
@@ -545,21 +545,27 @@ class AudiobookAlbum(Agent.Album):
             cstring = None
 
             for r in html.xpath(u'//span[contains(text(), "\xA9")]'):
-                 cstring = self.getStringContentFromXPath(r, u'//span[contains(text(), "\xA9")]')
+                 cstring = self.getStringContentFromXPath(r, u'normalize-space(//span[contains(text(), "\xA9")])')
+                 # only contains Audible copyright
+                 if cstring.startswith(u"\xA9 "):
+                     cstring = ""
+                     date = date[:4]
 
             if cstring:
                 if "Public Domain" in cstring:
-                    date = self.getDateFromString(re.match(".*\(P\)(\d{4})", cstring).group(1))
+                    date = re.match(".*\(P\)(\d{4})", cstring).group(1)
                 else:
                     if cstring.startswith(u'\xA9'):
                         cstring = cstring[1:]
                     if "(P)" in cstring:
                         cstring = re.match("(.*)\(P\).*", cstring).group(1)
                     if ";" in cstring:
-                        date = self.getDateFromString(str(min([int(i) for i in cstring.split() if i.isdigit()])))
+                        date = str(min([int(i) for i in cstring.split() if i.isdigit()]))
                     else:
-                        date = self.getDateFromString(re.match(".?(\d{4}).*", cstring).group(1))
+                        date = re.match(".?(\d{4}).*", cstring).group(1)
 
+            date = self.getDateFromString(date)
+            
             # for r in html.xpath('//li[contains (@class, "seriesLabel")]'):
             #    series = self.getStringContentFromXPath(r, '//li[contains (@class, "seriesLabel")]//a[1]')
             # Log(series.strip())
@@ -635,10 +641,16 @@ class AudiobookAlbum(Agent.Album):
 
         # clean title
         seriesshort = series_def
-        if series_def.endswith("Series"):
-            seriesshort = series_def[:-7]
-        if title.endswith(": "+seriesshort+volume_def):
-            title = title[:-(len(seriesshort+volume_def)+2)]
+        checkseries = " Series"
+
+        if series_def.endswith(checkseries):
+            seriesshort = series_def[:-len(checkseries)]
+
+        strip = [": "+seriesshort+volume_def, ": A LitRPG Saga", ": A litRPG Adventure"]
+
+        for quirks in strip:
+            if title.endswith(quirks):
+                title = title[:-len(quirks)]
 
         z = re.match("(.*)(, Book \d+)$", title)
         if z:
