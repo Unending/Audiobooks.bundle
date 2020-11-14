@@ -640,6 +640,16 @@ class AudiobookAlbum(Agent.Album):
         metadata.genres.add(genre1)
         metadata.genres.add(genre2)
 
+        # Add Narrator to Styles
+        narrators_list = narrator.split(",")
+        for narrators in narrators_list:
+            metadata.styles.add(narrators)
+
+        # Add Narrator to Moods
+        author_list = author.split(",")
+        for authors in author_list:
+            metadata.moods.add(authors)
+
         # clean title
         seriesshort = series_def
         checkseries = " Series"
@@ -670,7 +680,8 @@ class AudiobookAlbum(Agent.Album):
 
         metadata.collections.clear()
         metadata.collections.add(series)
-        metadata.collections.add(series2)
+        if series2:
+            metadata.collections.add(series2)
 
         media.artist = author
 
