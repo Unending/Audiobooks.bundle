@@ -542,30 +542,31 @@ class AudiobookAlbum(Agent.Album):
                             continue
 
             # prefer copyright year over datePublished
-            cstring = None
+            if Prefs['copyyear']:
+                cstring = None
 
-            for r in html.xpath(u'//span[contains(text(), "\xA9")]'):
-                 cstring = self.getStringContentFromXPath(r, u'normalize-space(//span[contains(text(), "\xA9")])')
-                 # only contains Audible copyright
-                 if cstring.startswith(u"\xA9 "):
-                     cstring = ""
-                     date = date[:4]
+                for r in html.xpath(u'//span[contains(text(), "\xA9")]'):
+                     cstring = self.getStringContentFromXPath(r, u'normalize-space(//span[contains(text(), "\xA9")])')
+                     # only contains Audible copyright
+                     if cstring.startswith(u"\xA9 "):
+                         cstring = ""
+                         date = date[:4]
 
-            if cstring:
-                if "Public Domain" in cstring:
-                    date = re.match(".*\(P\)(\d{4})", cstring).group(1)
-                else:
-                    if cstring.startswith(u'\xA9'):
-                        cstring = cstring[1:]
-                    if "(P)" in cstring:
-                        cstring = re.match("(.*)\(P\).*", cstring).group(1)
-                    if ";" in cstring:
-                        date = str(min([int(i) for i in cstring.split() if i.isdigit()]))
+                if cstring:
+                    if "Public Domain" in cstring:
+                        date = re.match(".*\(P\)(\d{4})", cstring).group(1)
                     else:
-                        date = re.match(".?(\d{4}).*", cstring).group(1)
+                        if cstring.startswith(u'\xA9'):
+                            cstring = cstring[1:]
+                        if "(P)" in cstring:
+                            cstring = re.match("(.*)\(P\).*", cstring).group(1)
+                        if ";" in cstring:
+                            date = str(min([int(i) for i in cstring.split() if i.isdigit()]))
+                        else:
+                            date = re.match(".?(\d{4}).*", cstring).group(1)
 
             date = self.getDateFromString(date)
-            
+
             # for r in html.xpath('//li[contains (@class, "seriesLabel")]'):
             #    series = self.getStringContentFromXPath(r, '//li[contains (@class, "seriesLabel")]//a[1]')
             # Log(series.strip())

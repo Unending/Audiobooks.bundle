@@ -1,13 +1,19 @@
-[{  "id": "sitetype",
+[{
+	"id": "sitetype",
 	"label": "Manually Select Audible Site (if unchecked, library language is used to determine the best site)",
 	"type": "bool",
 	"default": "true"
 },{
-    "id"      : "site",
-    "label"   : "Select Audible site to use: ",
-    "type"    : "enum",
-    "values"  : ["www.audible.com","www.audible.ca","www.audible.co.uk","www.audible.com.au","www.audible.de","www.audible.fr","www.audible.it"],
-    "default" : "www.audible.com"
+  "id" : "site",
+  "label" : "Select Audible site to use: ",
+  "type" : "enum",
+  "values" : ["www.audible.com","www.audible.ca","www.audible.co.uk","www.audible.com.au","www.audible.de","www.audible.fr","www.audible.it"],
+  "default" : "www.audible.com"
+},{
+	"id": "copyyear",
+	"label": "User copyright year instead of datePublished",
+	"type": "bool",
+	"default": "false"
 },{
 	"id": "debug",
 	"label": "Ouput debugging info in logs",
