@@ -731,6 +731,16 @@ class AudiobookAlbum(Agent.Album):
             for i in range(len(metadata.genres)):
                 self.Log('| * Genre:         %s', metadata.genres[i])
 
+        if len(metadata.moods) > 0:
+            self.Log('|\\')
+            for i in range(len(metadata.moods)):
+                self.Log('| * Moods:         %s', metadata.moods[i])
+
+        if len(metadata.styles) > 0:
+            self.Log('|\\')
+            for i in range(len(metadata.styles)):
+                self.Log('| * Styles:        %s', metadata.styles[i])
+
         if len(metadata.posters) > 0:
             self.Log('|\\')
             for poster in metadata.posters.keys():
