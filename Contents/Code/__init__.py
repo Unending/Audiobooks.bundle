@@ -640,15 +640,19 @@ class AudiobookAlbum(Agent.Album):
         metadata.genres.add(genre1)
         metadata.genres.add(genre2)
 
-        # Add Narrator to Styles
+        # Add Narrators to Styles
         narrators_list = narrator.split(",")
         for narrators in narrators_list:
             metadata.styles.add(narrators)
 
-        # Add Narrator to Moods
+        # Add Authors to Moods
         author_list = author.split(",")
+        contributers_list = ['contributor', 'translator', 'foreword']
+        metadata.moods.clear()
         for authors in author_list:
-            metadata.moods.add(authors)
+            for contributors in contributers_list:
+                if not [item for item in contributers_list if item in authors.lower()]:
+                    metadata.moods.add(authors)
 
         # clean title
         seriesshort = series_def
