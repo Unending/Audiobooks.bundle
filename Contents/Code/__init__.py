@@ -643,7 +643,7 @@ class AudiobookAlbum(Agent.Album):
         # Add Narrators to Styles
         narrators_list = narrator.split(",")
         for narrators in narrators_list:
-            metadata.styles.add(narrators)
+            metadata.styles.add(narrators.strip())
 
         # Add Authors to Moods
         author_list = author.split(",")
@@ -652,7 +652,7 @@ class AudiobookAlbum(Agent.Album):
         for authors in author_list:
             for contributors in contributers_list:
                 if not [item for item in contributers_list if item in authors.lower()]:
-                    metadata.moods.add(authors)
+                    metadata.moods.add(authors.strip())
 
         # clean title
         seriesshort = series_def
@@ -660,16 +660,11 @@ class AudiobookAlbum(Agent.Album):
 
         if series_def.endswith(checkseries):
             seriesshort = series_def[:-len(checkseries)]
+        
+        y = re.match("(.*)((,|:) Book \d+|(: ((" + seriesshort + volume_def + ")|(A .* (Saga|Adventure|Series|Novella))|(The .*|Special) Edition))| \(" + seriesshort + ", Book \d+; .*\))$", title)
 
-        strip = [": "+seriesshort+volume_def, ": A LitRPG Saga", ": A litRPG Adventure"]
-
-        for quirks in strip:
-            if title.endswith(quirks):
-                title = title[:-len(quirks)]
-
-        z = re.match("(.*)(, Book \d+)$", title)
-        if z:
-            title = z.group(1)
+        if y:
+            title = y.group(1)
 
         # other metadata
         metadata.title = title
@@ -680,7 +675,7 @@ class AudiobookAlbum(Agent.Album):
         if rating:
             metadata.rating = float(rating) * 2
 
-        metadata.title_sort = ' - '.join(filter(None, [(series_def+volume_def),title]))
+        metadata.title_sort = ' - '.join(filter(None, [(series_def+volume_def), title]))
 
         metadata.collections.clear()
         metadata.collections.add(series)
