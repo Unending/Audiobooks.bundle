@@ -647,7 +647,7 @@ class AudiobookAlbum(Agent.Album):
 
         # Add Authors to Moods
         author_list = author.split(",")
-        contributers_list = ['contributor', 'translator', 'foreword']
+        contributers_list = ['contributor', 'translator', 'foreword', 'translated']
         metadata.moods.clear()
         for authors in author_list:
             for contributors in contributers_list:
@@ -660,7 +660,7 @@ class AudiobookAlbum(Agent.Album):
 
         if series_def.endswith(checkseries):
             seriesshort = series_def[:-len(checkseries)]
-        
+
         y = re.match("(.*)((,|:) Book \d+|(: ((" + seriesshort + volume_def + ")|(A .* (Saga|Adventure|Series|Novella))|(The .*|Special) Edition))| \(" + seriesshort + ", Book \d+; .*\))$", title)
 
         if y:
