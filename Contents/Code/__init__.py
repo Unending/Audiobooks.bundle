@@ -655,6 +655,12 @@ class AudiobookAlbum(Agent.Album):
                 if not [item for item in contributers_list if item in authors.lower()]:
                     metadata.moods.add(authors.strip())
 
+        # clean series
+        x = re.match("(.*)(: A .* Series)", series_def)
+
+        if x:
+            series_def = x.group(1)
+
         # clean title
         seriesshort = series_def
         checkseries = " Series"
@@ -676,7 +682,7 @@ class AudiobookAlbum(Agent.Album):
         if rating:
             metadata.rating = float(rating) * 2
 
-        metadata.title_sort = ' - '.join(filter(None, [(series_def+volume_def), title]))
+        metadata.title_sort = ' - '.join(filter(None, [(series_def + volume_def), title]))
 
         metadata.collections.clear()
         metadata.collections.add(series)
