@@ -642,6 +642,7 @@ class AudiobookAlbum(Agent.Album):
 
         # Add Narrators to Styles
         narrators_list = narrator.split(",")
+        metadata.styles.clear()
         for narrators in narrators_list:
             metadata.styles.add(narrators.strip())
 
