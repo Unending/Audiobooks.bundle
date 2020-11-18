@@ -588,6 +588,16 @@ class AudiobookAlbum(Agent.Album):
                 volume_def = volume2 if volume2 else volume
                 # volume_def = volume
 
+            # fix series when audible 'forgets' the series link…
+            if not series_def:
+                for r in html.xpath('//div[contains(@class, "adbl-main")]'):
+                    subtitle = self.getStringContentFromXPath(r, 'normalize-space(//li[contains(@class, "authorLabel")]//preceding::li[1]//span//text())').strip()
+
+                w = re.match("(.*)(, Book \d+)", subtitle)
+                if not series_def and w:
+                    series_def = w.group(1)
+                    volume_def = w.group(2)
+
         #cleanup synopsis
         synopsis = synopsis.replace("<i>", "")
         synopsis = synopsis.replace("</i>", "")
