@@ -4,6 +4,7 @@ Forked from: https://github.com/macr0dev/Audiobooks.bundle
 ## Changes
 * Don't write Narrators and Series to *Genres*
 * Do write Narrators to *Styles*
+  * Exclude contributors (full cast, …)
 * Do write Series to *Collections*
   * **NOTE:** Plex currently fails to present this info
 * Write Authors to Moods

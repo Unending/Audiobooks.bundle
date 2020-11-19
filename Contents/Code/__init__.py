@@ -680,7 +680,7 @@ class AudiobookAlbum(Agent.Album):
         if series_def.endswith(checkseries):
             seriesshort = series_def[:-len(checkseries)]
 
-        y = re.match("(.*)((,|:) Book \d+|(: ((" + seriesshort + volume_def + ")|(A .* (Saga|Adventure|Series|Novella))|(The .*|Special) Edition))| \(" + seriesshort + ", Book \d+; .*\))$", title)
+        y = re.match("(.*)((: .* " + volume_def[2:] + ": A .* Series)|(((:|,|-) )((" + seriesshort + volume_def + ")|((?<!" + seriesshort + ", )(" + volume_def[2:] + "))|((The .*|Special) Edition)|((?<!" + volume_def[2:] + ": )An? .* (Adventure|Novella|Series|Saga))|(A Novel of the .*))|( \(" + seriesshort + ", Book \d+; .*\))))$", title)
 
         if y:
             title = y.group(1)
